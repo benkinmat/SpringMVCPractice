@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import springmvc.model.Employee;
 import springmvc.model.UserRole;
 import springmvc.service.EmployeeService;
 import springmvc.service.UserRoleService;
+import springmvc.utils.FileValidator;
 
 @Controller
 @RequestMapping("/")
@@ -35,6 +38,16 @@ public class AppController {
 
 	@Autowired
 	MessageSource messageSource;
+	
+	@Autowired
+	FileValidator fileValidator;
+	
+	@InitBinder("fileBucker")
+	protected void initBinder(WebDataBinder webDataBinder){
+		
+		webDataBinder.setValidator(fileValidator);
+		
+	}
 
 	@RequestMapping(value = { "/", "list" }, method = RequestMethod.GET)
 	public String listEmployees(ModelMap model) {
