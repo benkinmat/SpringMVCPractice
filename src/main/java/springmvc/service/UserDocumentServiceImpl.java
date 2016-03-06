@@ -40,4 +40,10 @@ public class UserDocumentServiceImpl implements UserDocumentService {
 
 	}
 
+	public List<UserDocument> findAllDocumentByUserId(Integer userId) {
+
+		return userDocumentDao.findAllDocumentByUserId(userId);
+		
+	}
+
 }

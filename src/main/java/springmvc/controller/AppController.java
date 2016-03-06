@@ -1,5 +1,6 @@
 package springmvc.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,10 +19,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import springmvc.model.Employee;
+import springmvc.model.FileBucker;
+import springmvc.model.UserDocument;
 import springmvc.model.UserRole;
 import springmvc.service.EmployeeService;
+import springmvc.service.UserDocumentService;
 import springmvc.service.UserRoleService;
 import springmvc.utils.FileValidator;
 
@@ -32,21 +37,24 @@ public class AppController {
 
 	@Autowired
 	EmployeeService employeeService;
-	
+
 	@Autowired
 	UserRoleService userRoleService;
 
 	@Autowired
+	UserDocumentService userDocumentService;
+
+	@Autowired
 	MessageSource messageSource;
-	
+
 	@Autowired
 	FileValidator fileValidator;
-	
+
 	@InitBinder("fileBucker")
-	protected void initBinder(WebDataBinder webDataBinder){
-		
+	protected void initBinder(WebDataBinder webDataBinder) {
+
 		webDataBinder.setValidator(fileValidator);
-		
+
 	}
 
 	@RequestMapping(value = { "/", "list" }, method = RequestMethod.GET)
@@ -134,9 +142,73 @@ public class AppController {
 		return "redirect:/";
 
 	}
-	
+
+	@RequestMapping(value = { "/upload-document-{employeeId}" }, method = RequestMethod.GET)
+	public String addDocument(ModelMap model, @PathVariable int employeeId) {
+
+		Employee employee = employeeService.getEmployeeById(employeeId);
+		model.addAttribute("employee", employee);
+
+		List<UserDocument> documents = userDocumentService
+				.findAllDocumentByUserId(employeeId);
+		model.addAttribute("documents", documents);
+
+		FileBucker fileBucker = new FileBucker();
+		model.addAttribute("fileBucker", fileBucker);
+		
+		return "userdocuments";
+
+	}
+
+	@RequestMapping(value = { "/upload-document-{employeeId}" }, method = RequestMethod.POST)
+	public String uploadDocument(@Valid FileBucker fileBucker,
+			BindingResult result, ModelMap model, @PathVariable int employeeId)
+			throws IOException {
+
+		if (result.hasErrors()) {
+			System.out.println("The input file has error.");
+
+			Employee employee = employeeService.getEmployeeById(employeeId);
+			model.addAttribute("employee", employee);
+
+			List<UserDocument> documents = userDocumentService
+					.findAllDocumentByUserId(employeeId);
+			model.addAttribute("documents", documents);
+
+			return "userdocument";
+
+		} else {
+			System.out.println("Fetching file.");
+
+			Employee employee = employeeService.getEmployeeById(employeeId);
+			model.addAttribute("employee", employee);
+
+			saveDocument(fileBucker, employee);
+
+			return "redirect:/upload-document-" + employeeId;
+		}
+
+	}
+
+	public void saveDocument(FileBucker fileBucker, Employee employee)
+			throws IOException {
+
+		UserDocument document = new UserDocument();
+
+		MultipartFile multipartFile = fileBucker.getFile();
+
+		document.setName(multipartFile.getOriginalFilename());
+		document.setType(multipartFile.getContentType());
+		document.setContent(multipartFile.getBytes());
+		document.setDescription(fileBucker.getDescription());
+		document.setEmployee(employee);
+
+		userDocumentService.save(document);
+
+	}
+
 	@ModelAttribute("roles")
-	public List<UserRole> initializeRoles(){
+	public List<UserRole> initializeRoles() {
 		return userRoleService.getAllUserRoles();
 	}
 

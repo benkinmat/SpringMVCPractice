@@ -82,6 +82,12 @@
 
 					<a href="<c:url value='/list' />" class="btn btn-default">Cancel</a>
 				</div>
+				
+				<div class="form-group">
+					<c:if test="${ edit }">
+						<a href='<c:url value='/upload-document-${ employee.id }'></c:url>'>Upload User's Documents</a>
+					</c:if>
+				</div>
 			</fieldset>
 		</form:form>
 	</div>

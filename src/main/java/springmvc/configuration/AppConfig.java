@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -47,5 +48,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		messageSource.setBasename("messages");
 
 		return messageSource;
+	}
+	
+	@Bean(name = "multipartResolver")
+	public StandardServletMultipartResolver resolver(){
+		
+		return new StandardServletMultipartResolver();
+		
 	}
 }

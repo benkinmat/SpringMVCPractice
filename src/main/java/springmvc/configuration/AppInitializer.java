@@ -8,7 +8,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class AppInitializer extends
 		AbstractAnnotationConfigDispatcherServletInitializer {
 
-	private static final String LOCATION = "C:/mytemp/";
+	private static final String LOCATION = "C:/Users/51000_000/Downloads";
 
 	private static final long MAX_FILE_SIZE = 1024 * 1024 * 25;// 25MB
 

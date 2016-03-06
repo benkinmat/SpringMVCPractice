@@ -9,6 +9,8 @@ public interface UserDocumentService {
 	public UserDocument findById(Integer id);
 
 	public List<UserDocument> findAll();
+	
+	public List<UserDocument> findAllDocumentByUserId(Integer userId);
 
 	public void save(UserDocument userDocument);
 

@@ -10,6 +10,8 @@ public interface UserDocumentDao {
 	
 	public List<UserDocument> findAll();
 	
+	public List<UserDocument> findAllDocumentByUserId(Integer userId);
+	
 	public void delete(Integer id);
 	
 	public void save(UserDocument userDocument);

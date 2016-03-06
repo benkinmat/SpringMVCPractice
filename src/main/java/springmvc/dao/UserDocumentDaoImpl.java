@@ -3,6 +3,7 @@ package springmvc.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import springmvc.model.UserDocument;
@@ -33,6 +34,15 @@ public class UserDocumentDaoImpl extends AbstractDao<Integer, UserDocument> impl
 	public void save(UserDocument userDocument) {
 
 		persist(userDocument);
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<UserDocument> findAllDocumentByUserId(Integer userId) {
+
+		Criteria criteria = getCriteria();
+		criteria.add(Restrictions.eq("id", userId));
+		return (List<UserDocument>) criteria.list();
 		
 	}	
 	
