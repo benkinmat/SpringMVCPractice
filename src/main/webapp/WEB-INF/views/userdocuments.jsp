@@ -19,14 +19,14 @@
 	<div class="container">
 		<h2>All of employee's documents</h2>
 
-		<table class="table">
+		<table class="table table-nonfluid">
 			<thead>
 				<tr>
 					<th>NO</th>
 					<th>Name</th>
 					<th>Description</th>
-					<th width="100"></th>
-					<th width="100"></th>
+					<th></th>
+					<th></th>
 				</tr>
 			</thead>
 
@@ -37,12 +37,11 @@
 						<td>${ doc.name }</td>
 						<td>${ doc.description }</td>
 						<td><a
-							href='<c:url value="/download-document-${ userId }-${ documentId}"></c:url>'
+							href='<c:url value="/download-document-${ employee.id }-${ doc.id}"></c:url>'
 							class="btn btn-success custom-width">Download</a></td>
 						<td><a
-							href='<c:url value="/delete-document-${ userId }-${ documentId}"></c:url>'
+							href='<c:url value="/delete-document-${ employee.id }-${ doc.id}"></c:url>'
 							class="btn btn-danger custom-width">Delete</a></td>
-						<td><a href="#" class="btn btn-danger custom-width">Delete</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -69,7 +68,7 @@
 
 			<div class="form-group col-md-12">
 				<button type="submit" class="btn btn-default" value="Upload">Upload</button>
-				
+				<a href="<c:url value='/list' />" class="btn btn-default">Cancel</a>
 			</div>
 		</form:form>
 

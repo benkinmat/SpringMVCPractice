@@ -41,7 +41,8 @@ public class UserDocumentDaoImpl extends AbstractDao<Integer, UserDocument> impl
 	public List<UserDocument> findAllDocumentByUserId(Integer userId) {
 
 		Criteria criteria = getCriteria();
-		criteria.add(Restrictions.eq("id", userId));
+		Criteria criteriaEmployee = criteria.createCriteria("employee");
+		criteriaEmployee.add(Restrictions.eq("id", userId));
 		return (List<UserDocument>) criteria.list();
 		
 	}	

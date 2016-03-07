@@ -23,9 +23,21 @@ CREATE TABLE EMP_USER_ROLE(
     CONSTRAINT fk_user_role FOREIGN KEY (user_role_id) REFERENCES USER_ROLE (id)
 );
 
+CREATE TABLE USER_DOCUMENT(
+	id INT NOT NULL AUTO_INCREMENT,
+    type VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    content LONGBLOB NOT NULL,
+    user_id INT NOT NULL,
+    primary key (id),
+    constraint fk_doc_user FOREIGN KEY (user_id) references employee (id)
+);
+
 SELECT * FROM springmvc.employee;
 SELECT * FROM springmvc.user_role;
 SELECT * FROM springmvc.emp_user_role;
+SELECT * FROM springmvc.user_document;
 
 INSERT INTO user_role VALUES (1, 'ADMIN');
 INSERT INTO user_role VALUES (2, 'USER');
@@ -34,5 +46,6 @@ INSERT INTO user_role VALUES (3, 'DBA');
 DROP TABLE springmvc.employee;
 DROP TABLE springmvc.user_role;
 DROP TABLE springmvc.emp_user_role;
+DROP TABLE springmvc.user_document;
 
 SHOW ENGINE INNODB STATUS;

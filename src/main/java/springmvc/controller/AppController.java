@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
@@ -155,7 +157,7 @@ public class AppController {
 
 		FileBucker fileBucker = new FileBucker();
 		model.addAttribute("fileBucker", fileBucker);
-		
+
 		return "userdocuments";
 
 	}
@@ -175,7 +177,7 @@ public class AppController {
 					.findAllDocumentByUserId(employeeId);
 			model.addAttribute("documents", documents);
 
-			return "userdocument";
+			return "userdocuments";
 
 		} else {
 			System.out.println("Fetching file.");
@@ -187,6 +189,34 @@ public class AppController {
 
 			return "redirect:/upload-document-" + employeeId;
 		}
+
+	}
+
+	@RequestMapping(value = { "/download-document-{employeeId}-{documentId}" }, method = RequestMethod.GET)
+	public String downloadDocument(@PathVariable int employeeId,
+			@PathVariable int documentId, HttpServletResponse response)
+			throws IOException {
+
+		UserDocument userDocument = userDocumentService.findById(documentId);
+		response.setContentType(userDocument.getType());
+		response.setContentLength(userDocument.getContent().length);
+		response.setHeader("Content-Disposition", "attachment; filename=\""
+				+ userDocument.getName() + "\"");
+
+		FileCopyUtils.copy(userDocument.getContent(),
+				response.getOutputStream());
+
+		return "redirect:/upload-document-" + employeeId;
+
+	}
+
+	@RequestMapping(value = { "/delete-document-{employeeId}-{documentId}" }, method = RequestMethod.GET)
+	public String deleteDocument(@PathVariable int employeeId,
+			@PathVariable int documentId) {
+
+		userDocumentService.deleteById(documentId);
+
+		return "redirect:/upload-document-" + employeeId;
 
 	}
 
